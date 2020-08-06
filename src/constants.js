@@ -4,6 +4,7 @@ module.exports = {
   DEFAULT_COMMAND: `--help`,
   USER_ARGV_INDEX: 1,
   ExitCode: {
-    success: 0
+    SUCCESS: 0,
+    ERROR: 1
   },
 };

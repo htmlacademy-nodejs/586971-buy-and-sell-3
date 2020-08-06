@@ -1,10 +1,12 @@
 'use strict';
 
+const chalk = require(`chalk`);
 const {
   getRandomInt,
   shuffle,
 } = require(`../../utils`);
 const fs = require(`fs`);
+const { ExitCode } = require(`../../constants`);
 
 const DEFAULT_COUNT = 1;
 const FILE_NAME = `mocks.json`;
@@ -64,15 +66,17 @@ const PictureRestrict = {
   MAX: 16
 };
 
+const DESCRIPTION_SIZE = 5;
+
 const getPictureFileName = (number) => {
-  const numberText = number < 10 ? number : `0${number}`;
+  const numberText = number > 9 ? number : `0${number}`;
   return `item${numberText}.jpg`;
 };
 
 const generateOffers = (count) => (
   Array(count).fill({}).map(() => ({
     category: [CATEGORIES[getRandomInt(0, CATEGORIES.length - 1)]],
-    description: shuffle(SENTENCES).slice(1, 5).join(` `),
+    description: shuffle(SENTENCES).slice(1, DESCRIPTION_SIZE).join(` `),
     picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
     title: TITLES[getRandomInt(0, TITLES.length - 1)],
     type: Object.keys(OfferType)[Math.floor(Math.random() * Object.keys(OfferType).length)],
@@ -88,9 +92,11 @@ module.exports = {
     const content = JSON.stringify(generateOffers(countOffer));
     fs.writeFile(FILE_NAME, content, (err) => {
       if (err) {
-        return console.error(`Can't write data to file...`);
+        console.error(chalk.red(`Can't write data to file...`));
+        return ExitCode.ERROR;
       }
-      return console.info(`Operation success. File created.`);
+      console.info(chalk.green(`Operation success. File created.`));
+      return ExitCode.SUCCESS;
     });
   }
 };
