@@ -2,9 +2,9 @@
 
 /**
  * Функция для получения случайных значений из диапазона
- * @return {array} - случайное число
- * @param {array} min - "от"
- * @param {array} max - "до"
+ * @return {int} - случайное число
+ * @param {int} min - "от"
+ * @param {int} max - "до"
  * */
 module.exports.getRandomInt = (min, max) => {
   min = Math.ceil(min);
