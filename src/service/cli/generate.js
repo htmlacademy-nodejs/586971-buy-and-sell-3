@@ -6,7 +6,7 @@ const {
   shuffle,
 } = require(`../../utils`);
 const fs = require(`fs`).promises;
-const { ExitCode } = require(`../../constants`);
+const {ExitCode} = require(`../../constants`);
 
 const DEFAULT_COUNT = 1;
 const FILE_NAME = `mocks.json`;
@@ -41,7 +41,7 @@ const getPictureFileName = (number) => {
 const readContent = async (filePath) => {
   try {
     const content = await fs.readFile(filePath, `utf8`);
-    return content.split('\n');
+    return content.split(`\n`);
   } catch (err) {
     console.error(chalk.red(err));
     return [];
@@ -66,7 +66,7 @@ module.exports = {
     const titles = await readContent(FILE_TITLES_PATH);
     const categories = await readContent(FILE_CATEGORIES_PATH);
 
-    const [,count] = args;
+    const [, count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
     const content = JSON.stringify(generateOffers(countOffer, titles, categories, sentences));
     try {
