@@ -6,6 +6,7 @@ const fs = require(`fs`).promises;
 const {HttpCode} = require(`../../constants`);
 
 const DEFAULT_PORT = 3000;
+const NOT_FOUND_MESSAGE_TEXT = `Not found`;
 const FILENAME = `mocks.json`;
 
 const sendResponse = (res, statusCode, message) => {
@@ -27,8 +28,6 @@ const sendResponse = (res, statusCode, message) => {
 };
 
 const onClientConnect = async (req, res) => {
-  const NOT_FOUND_MESSAGE_TEXT = `Not found`;
-
   switch (req.url) {
     case `/`:
       try {
