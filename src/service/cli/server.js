@@ -16,8 +16,9 @@ offerRouter.get(`/`, async (req, res) => {
     const mocks = JSON.parse(fileContent);
     if (!mocks || mocks.length === 0) {
       res.json([]);
+    } else {
+      res.json(mocks);
     }
-    res.json(mocks);
   } catch (err) {
     res.status(HttpCode.INTERNAL_SERVER_ERROR).send(err);
   }
