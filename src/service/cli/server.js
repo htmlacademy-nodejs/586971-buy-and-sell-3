@@ -1,49 +1,36 @@
 'use strict';
 
-const chalk = require(`chalk`);
-const http = require(`http`);
 const fs = require(`fs`).promises;
+const express = require(`express`);
+const {Router} = require(`express`);
 const {HttpCode} = require(`../../constants`);
 
 const DEFAULT_PORT = 3000;
-const NOT_FOUND_MESSAGE_TEXT = `Not found`;
 const FILENAME = `mocks.json`;
 
-const sendResponse = (res, statusCode, message) => {
-  const template = `
-    <!Doctype html>
-      <html lang="ru">
-      <head>
-        <title>With love from Node</title>
-      </head>
-      <body>${message}</body>
-    </html>`.trim();
+const offerRouter = new Router();
 
-  res.statusCode = statusCode;
-  res.writeHead(statusCode, {
-    'Content-Type': `text/html; charset=UTF-8`,
-  });
-
-  res.end(template);
-};
-
-const onClientConnect = async (req, res) => {
-  switch (req.url) {
-    case `/`:
-      try {
-        const fileContent = await fs.readFile(FILENAME);
-        const mocks = JSON.parse(fileContent);
-        const message = mocks.map((post) => `<li>${post.title}</li>`).join(``);
-        sendResponse(res, HttpCode.OK, `<ul>${message}</ul>`);
-      } catch (err) {
-        sendResponse(res, HttpCode.NOT_FOUND, NOT_FOUND_MESSAGE_TEXT);
-      }
-      break;
-    default:
-      sendResponse(res, HttpCode.NOT_FOUND, NOT_FOUND_MESSAGE_TEXT);
-      break;
+offerRouter.get(`/`, async (req, res) => {
+  try {
+    const fileContent = await fs.readFile(FILENAME);
+    const mocks = JSON.parse(fileContent);
+    if (!mocks || mocks.length === 0) {
+      res.json([]);
+    } else {
+      res.json(mocks);
+    }
+  } catch (err) {
+    res.status(HttpCode.INTERNAL_SERVER_ERROR).send(err);
   }
-};
+});
+
+const app = express();
+app.use(express.json());
+app.use(`/offers`, offerRouter);
+
+app.use((req, res) => res
+  .status(HttpCode.NOT_FOUND)
+  .send(`Not found`));
 
 module.exports = {
   name: `--server`,
@@ -51,13 +38,6 @@ module.exports = {
     const [, customPort] = args;
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
 
-    http.createServer(onClientConnect)
-      .listen(port)
-      .on(`listening`, (err) => {
-        if (err) {
-          return console.error(`Ошибка при создании сервера`, err);
-        }
-        return console.info(chalk.green(`Ожидаю соединений на ${port}`));
-      });
+    app.listen(port);
   }
 };
