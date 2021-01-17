@@ -14,7 +14,7 @@ const getMockData = async () => {
     data = JSON.parse(fileContent);
   } catch (err) {
     console.error(err);
-    return Promise.reject(err)
+    return Promise.reject(err);
   }
 
   return Promise.resolve(data);

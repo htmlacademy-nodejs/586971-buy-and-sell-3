@@ -47,7 +47,7 @@ module.exports = (app, offerService, commentService) => {
 
   route.delete(`/:offerId`, (req, res) => {
     const {offerId} = req.params;
-    const offer = offerService.drop(offerId);
+    offerService.drop(offerId);
 
     return res.status(HttpCode.OK)
       .send(`Offer ${offerId} has been deleted`);
@@ -89,5 +89,5 @@ module.exports = (app, offerService, commentService) => {
 
     return res.status(HttpCode.OK)
       .json(offer);
-  })
+  });
 };

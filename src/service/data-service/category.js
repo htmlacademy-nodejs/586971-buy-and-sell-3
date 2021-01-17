@@ -1,3 +1,5 @@
+'use strict';
+
 class CategoryService {
   constructor(offers) {
     this._offers = offers;
@@ -9,7 +11,7 @@ class CategoryService {
       return acc;
     }, new Set());
 
-    return [...categories]
+    return [...categories];
   }
 }
 

@@ -12,7 +12,7 @@ module.exports = (app, service) => {
     const {query} = req.query;
     const offers = service.find(query);
 
-    if(!offers) {
+    if (!offers) {
       return res.status(HttpCode.NOT_FOUND)
         .send(`not found offers with this name`);
     }
